@@ -13,6 +13,9 @@ The provided tools have been tested with the following OPERA composite products:
 
 They have also been tested with the 1-h and 24-h precipitation accumulations in EURADCLIM. Note that all these datasets are in the ODIM-HDF5 format on the default OPERA grid of 2 km resolution (Lambert Azimuthal Equal Area projection; 2200 times 1900 grid cells).
 
+Note that some Python libraries need to be installed for these script to work.
+
 URL to EURADCLIM dataset will be added soon.
 URL to accompanying scientific manuscript will be added soon.
 
+![Example](RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg)
