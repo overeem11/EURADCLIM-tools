@@ -23,4 +23,4 @@ URL to EURADCLIM dataset will be added soon.
 URL to accompanying scientific manuscript will be added soon.
 
 #![width=50](RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg)
-<img src="RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg" width="100">
+<img src="RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg" width="10">
