@@ -3,7 +3,7 @@ EURADCLIM (EUropean RADar CLIMatology) is a publicly available climatological da
 
 The following tools, written in programming language Python (version 3), are made available in EURADCLIM-tools:
 - "AccumulateRadarHDF5ODIMListCount.py": Script to accumulate ODIM HDF5 radar precipitation images where the file names are provided as input or to accumulate ODIM HDF5 radar precipitation images for a given path.
-- "ClimatologyRadarHDF5ODIMList.py": Script to perform climatological analysis on ODIM HDF5 radar precipitation images where the file names are provided as input or for a given path. The maximum rainfall, mean rainfall, number of events (= frequency) above a threshold value, or number of events above a threshold value divided by the total number of events (= relative frequency) can be computed.
+- "ClimatologyRadarHDF5ODIMList.py": Script to perform climatological analyses on ODIM HDF5 radar precipitation images where the file names are provided as input or for a given path. The maximum rainfall, mean rainfall, number of events (= frequency) above a threshold value, or number of events above a threshold value divided by the total number of events (= relative frequency) can be computed.
 - "VisualizeHDF5ODIMCartopy.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.
 - "VisualizeHDF5ODIMCartopyOSM_GM.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe. Draws an OpenStreetMap or Google Maps as background. Useful when zooming in on a part of Europe.
 
