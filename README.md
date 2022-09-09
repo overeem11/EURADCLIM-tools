@@ -8,8 +8,8 @@ The following tools, written in programming language Python 3, are made availabl
 - "VisualizeHDF5ODIMCartopyOSM_GM.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.Draws an OpenStreetMap or Google Maps as background. Useful when zooming in on a part of Europe.
 
 The provided tools have been tested with the following OPERA composite products:
-– Instantaneous Surface Rain Rate
-– 1 Hour Rainfall Accumulation
+- Instantaneous Surface Rain Rate
+- 1 Hour Rainfall Accumulation
 
 The have also been tested with the 1-h and 24-h precipitation accumulations in EURADCLIM. Note that all these datasets are in the ODIM-HDF5 format on the default OPERA grid of 2 km resolution (Lambert Azimuthal Equal Area projection; 2200 times 1900 grid cells).
 
