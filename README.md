@@ -22,4 +22,4 @@ The file "RAD_OPERA_RAINFALL_RATE_201812110715.h5" is used as a template ODIM-HD
 URL to EURADCLIM dataset will be added soon.
 URL to accompanying scientific manuscript will be added soon.
 
-![](RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg| width=100)
+![](RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg | width=100)
