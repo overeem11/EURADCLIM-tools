@@ -13,7 +13,9 @@ The provided tools have been tested with the following OPERA composite products:
 
 They have also been tested with the 1-h and 24-h precipitation accumulations in EURADCLIM. Note that all these datasets are in the ODIM-HDF5 format on the default OPERA grid of 2 km resolution (Lambert Azimuthal Equal Area projection; 2200 times 1900 grid cells).
 
-Note that some Python libraries need to be installed for these script to work.
+Note that some Python libraries need to be installed for these tools to work, but they are not all needed for every tool: cartopy, cartopy.crs, cartopy.io.img_tiles, cartopy.mpl.gridliner, copy, h5py, matplotlib, matplotlib.pyplot, natsort, numpy, os, pandas, pathlib, pyepsg, pyproj, shutil, sys, warnings.
+
+The file "CoordinatesHDF5ODIMWGS84.dat" is needed for the two visualization tools. It contains the coordinates of the center of radar grid cells with longitude (first column) and latitude (second column) in degrees (WGS84). This may also be useful for processing the EURADCLIM radar data for analyses and applications or for other visualization tools.
 
 URL to EURADCLIM dataset will be added soon.
 URL to accompanying scientific manuscript will be added soon.
