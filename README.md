@@ -1,7 +1,7 @@
 # EURADCLIM-tools
 EURADCLIM (EUropean RADar CLIMatology) is an open climatological dataset of 1-h and 24-h precipitation accumulations on a 2-km grid for the period 2013 through 2020. The starting point is the European Meteorological Network (EUMETNET) Operational Program on the Exchange of weather RAdar Information (OPERA) gridded radar dataset of 15-min instantaneous surface rain rates, which is based on data from, on average, 138 ground-based weather radars. After additional removal of non-meteorological echoes by three algorithms, this dataset is merged with precipitation accumulations from potentially ~7700 rain gauges obtained from the European Climate Assessment & Dataset (ECA&D). EURADCLIM covers about 78\% of geographical Europe.
 
-The following tools, written in programming language Python 3, are made available:
+The following tools, written in programming language Python 3, are made available in EURADCLIM-tools:
 - "AccumulateRadarHDF5ODIMListCount.py": Script to accumulate ODIM HDF5 radar rainfall images where the file names are provided as input or to accumulate ODIM HDF5 radar rainfall images for a given path.
 - "ClimatologyRadarHDF5ODIMList.py": Script to perform climatological analysis on ODIM HDF5 radar rainfall images where the file names are provided as input or for a given path. The maximum rainfall, mean rainfall, number of events (= frequency) above a threshold value, or number of events above a threshold value divided by the total number of events (= relative frequency) can be computed.
 - "VisualizeHDF5ODIMCartopy.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.
@@ -11,5 +11,5 @@ The provided tools have been tested with the following OPERA composite products:
 – Instantaneous Surface Rain Rate
 – 1 Hour Rainfall Accumulation
 
-The have also been tested with the 1-h and 24-h precipitation accumulations in EURADCLIM. 
+The have also been tested with the 1-h and 24-h precipitation accumulations in EURADCLIM. Note that all these datasets are in the ODIM-HDF5 format on the default OPERA grid of 2 km resolution (Lambert Azimuthal Equal Area projection; 2200 times 1900 grid cells).
 
