@@ -17,7 +17,7 @@ Note that some Python libraries need to be installed for these tools to work, bu
 
 The file "CoordinatesHDF5ODIMWGS84.dat" is needed for the two visualization tools. It contains the coordinates of the center of radar grid cells with longitude (first column) and latitude (second column) in degrees (WGS84). This may also be useful for processing the EURADCLIM radar data for analyses and applications or for other visualization tools.
 
-Also in case of missing file(s) an output file is made. If data criterion is not satisfied nodata values are present in the output file. In these cases the file "RAD_OPERA_RAINFALL_RATE_201812110715.h5" is used as a template ODIM-HDF5 file, from which the output file is constructed, where the data field is filled with nodata values (only needed for tools "AccumulateRadarHDF5ODIMListCount.py" & "ClimatologyRadarHDF5ODIMList.py"). 
+If none of the input files can be read for tools "AccumulateRadarHDF5ODIMListCount.py" or "ClimatologyRadarHDF5ODIMList.py", make an output file with metadata and the radardata field being entirely nodata. Then the file "RAD_OPERA_RAINFALL_RATE_201812110715.h5" is used as a template ODIM-HDF5 file, from which the output file is constructed, where the data field is filled with nodata values. 
 
 URL to EURADCLIM dataset will be added soon.
 URL to accompanying scientific manuscript will be added soon.
