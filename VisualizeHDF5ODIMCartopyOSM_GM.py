@@ -2,13 +2,31 @@
 # -*- coding: utf-8 -*-
 # Python script
 # Name: VisualizeHDF5ODIMCartopyOSM_GM.py
-# Author: Aart Overeem (KNMI)
-# Date: September 2021
+#
+#
+## Version 1.0
+## Copyright (C) 2022 Aart Overeem
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#
 # Description: Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.
 #              Read ODIM HDF5 files, extract values, read coordinates of center of grid cells. Plot variable on a map using the polygons and associated values.
 #              Output is a graphical file with a map. Draws an OpenStreetMap (OSM) or Google Maps (GM) as background. Transparency of polygons can be choosen (alpha), but
 #              seems especially useful when zooming in and does not work well at European scale.
-#              Note that coastlines and country borders can be plotted on top op the background map. These are clearly less accurate and can deviate 1-2 km from the ones in the background map.
+#              Note that coastlines and country borders can be plotted on top op the background map. 
+#              These are clearly less accurate and can deviate 1-2 km from the ones in the background map.
 #              This is not visible on a larger scale, such as Europe.
 #              This script is quite generic, since you need to provide the DatasetNr in the ODIM file and you can change label names (variable names), et cetera.
 #              So this script can be used to visualize the variable you like from a file which complies to the ODIM-HDF5 standard.
@@ -205,13 +223,13 @@ from matplotlib.colors import BoundaryNorm
 norm = BoundaryNorm(levels, ncolors=cmap.N, clip=False)
 CS3 = plt.pcolormesh(np.asarray(LonArray),np.asarray(LatArray),RArray,cmap=cmap,norm=norm,transform=transform, zorder=2,shading='nearest',alpha=alpha) 
 # Set highest class to chosen color "colorSetOver":
-CS3.cmap.set_over(colorSetOver)
+CS3.cmap.set_over(colorSetOver,alpha=alpha)
 
 
 
 # Plot color bar:
 if DoColorSetUnder=="DoColorSetUnder":
-   CS3.cmap.set_under(colorSetUnder)
+   CS3.cmap.set_under(colorSetUnder,alpha=alpha)
    if ColorBar=="ColorBar":
       # Plot color bar:
       font = mpl.font_manager.FontProperties(size=FontSizeLegend)

@@ -2,8 +2,25 @@
 # -*- coding: utf-8 -*-
 # Python script
 # Name: VisualizeHDF5ODIMCartopy.py
-# Author: Aart Overeem (KNMI)
-# Date: June 2022
+#
+#
+## Version 1.0
+## Copyright (C) 2022 Aart Overeem
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#
 # Description: Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.
 #              Read ODIM HDF5 files, extract values, read coordinates of center of grid cells. Plot variable on a map using the polygons and associated values.
 #              Output is a graphical file with a map.
