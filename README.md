@@ -24,7 +24,7 @@ The file "RAD_OPERA_RAINFALL_RATE_201812110715.h5" is used as a template ODIM-HD
 The EURADCLIM datasets of 1-h and 24-h precipitation accumulations are publicly available here: https://doi.org/10.21944/7ypj-wn68 & https://doi.org/10.21944/1a54-gg96.
 URL to accompanying scientific manuscript will be added soon.
 
-# Usage
+# Usage - Example for "VisualizeHDF5ODIMCartopy.py"
 ```
 python VisualizeHDF5ODIMCartopy.py RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400.h5 RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg 'EURADCLIM' '24-h precip depth (mm)' CbF '[1,10,20,30,40,50,60]' DrawCountries DrawCoastlines DrawLakelines DoNotColorSetUnder ColorBar '(a) End: 31 May 2013 14 UTC' lightgray lightblue 300 24 29 31 21 NA NA NA DrawNorthArrow DrawScaleBar '/dataset1'
 ```
