@@ -42,7 +42,6 @@
 # Example: python VisualizeHDF5ODIMCartopyOSM_GM.py RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM/2020/10/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400.h5 RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg 'EURADCLIM' '1-h precip depth (mm)' Blues '[5,20,35,50,65,80]' NoDrawCountries NoDrawCoastlines DoNotColorSetUnder ColorBar '(d) 2 Oct 2020 13-14 UTC' 600 24 29 31 26 NoDrawParallelsMeridians '/dataset1' OSM street 12 '[6.5,7.5,43.5,44.2]' 0.7 6.55 44.15
 
 
-
 # Load Python packages:
 import sys
 import matplotlib.pyplot as plt
