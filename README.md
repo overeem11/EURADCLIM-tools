@@ -7,6 +7,8 @@ The following tools, written in programming language Python (version 3), are mad
 - "VisualizeHDF5ODIMCartopy.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe.
 - "VisualizeHDF5ODIMCartopyOSM_GM.py": Script to visualize ODIM HDF5 images (data at a 2-D grid) over Europe. Draws an OpenStreetMap or Google Maps as background. Useful when zooming in on a part of Europe.
 
+Information on usage of these tools is provided in the respective Python script.
+
 The provided tools have been tested with the following OPERA composite products:
 - Instantaneous Surface Rain Rate
 - 1 Hour Rainfall Accumulation
