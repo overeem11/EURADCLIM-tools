@@ -35,6 +35,7 @@
 # [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"]
 # Example (annual precipitation accumulation over the year 2020): python AccumulateRadarHDF5ODIMListCount.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2020_01Y_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM/2020" "20201231" "230000" 1 7320 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path
 
+
 # Load Python packages:
 import sys
 import os
