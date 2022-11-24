@@ -31,11 +31,11 @@ The EURADCLIM datasets of 1-h and 24-h precipitation accumulations are publicly 
 python VisualizeHDF5ODIMCartopy.py RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400.h5 RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg 'EURADCLIM' '24-h precip depth (mm)' CbF '[1,10,20,30,40,50,60]' DrawCountries DrawCoastlines DrawLakelines DoNotColorSetUnder ColorBar '(a) End: 31 May 2013 14 UTC' lightgray lightblue 300 24 29 31 21 NA NA NA DrawNorthArrow DrawScaleBar '/dataset1'
 ```
 <img src="RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg" alt="drawing" width="500"/>
-Figure taken from https://doi.org/10.5194/essd-2022-334. Map made with Natural Earth. Free vector and raster map data &copynaturalearthdata.com.
+Figure taken from https://doi.org/10.5194/essd-2022-334. Map made with Natural Earth. Free vector and raster map data &copy naturalearthdata.com.
 
 # Usage - Example for "VisualizeHDF5ODIMCartopyOSM_GM.py"
 ```
 python VisualizeHDF5ODIMCartopyOSM_GM.py RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM/2020/10/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400.h5 figures/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg 'EURADCLIM' '1-h precip depth (mm)' CbF '[5,20,35,50,65,80]' NoDrawCountries NoDrawCoastlines DoNotColorSetUnder ColorBar '(d) 2 Oct 2020 13-14 UTC' 600 29 29 29 26 NoDrawParallelsMeridians '/dataset1' OSM street 12 '[6.5,7.5,43.5,44.2]' 1 6.55 44.15
 ```
 <img src="RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg" alt="drawing" width="500"/>
-Figure taken from https://doi.org/10.5194/essd-2022-334.
+Figure taken from https://doi.org/10.5194/essd-2022-334. &copy OpenStreetMap contributors 2022. Distributed under the Open Data Commons Open Database License (ODbL) v1.0.
