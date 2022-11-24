@@ -31,7 +31,7 @@ The EURADCLIM datasets of 1-h and 24-h precipitation accumulations are publicly 
 python VisualizeHDF5ODIMCartopy.py RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400.h5 RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg 'EURADCLIM' '24-h precip depth (mm)' CbF '[1,10,20,30,40,50,60]' DrawCountries DrawCoastlines DrawLakelines DoNotColorSetUnder ColorBar '(a) End: 31 May 2013 14 UTC' lightgray lightblue 300 24 29 31 21 NA NA NA DrawNorthArrow DrawScaleBar '/dataset1'
 ```
 <img src="RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg" alt="drawing" width="500"/>
-Figure taken from https://doi.org/10.5194/essd-2022-334. Map made with Natural Earth. Free vector and raster map data &copy naturalearthdata.com.
+Figure taken from https://doi.org/10.5194/essd-2022-334. Map made with Natural Earth. Free vector and raster map data &copynaturalearthdata.com.
 
 # Usage - Example for "VisualizeHDF5ODIMCartopyOSM_GM.py"
 ```
