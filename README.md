@@ -39,3 +39,8 @@ python VisualizeHDF5ODIMCartopyOSM_GM.py RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_
 ```
 <img src="RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg" alt="drawing" width="500"/>
 Figure taken from https://doi.org/10.5194/essd-2022-334. &copy OpenStreetMap contributors 2022. Distributed under the Open Data Commons Open Database License (ODbL) v1.0.
+
+# Reference
+When referring to EURADCLIM-tools, please use:
+
+Aart Overeem. (2022). EURADCLIM-tools (v.1.0). Zenodo. https://doi.org/10.5281/zenodo.7473816
