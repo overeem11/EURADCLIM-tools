@@ -24,7 +24,7 @@ The file "CoordinatesHDF5ODIMWGS84.dat" is needed for the two visualization tool
 The file "RAD_OPERA_RAINFALL_RATE_201812110715.h5" is used as a template ODIM-HDF5 file and only needed for tools "AccumulateRadarHDF5ODIMListCount.py" & "ClimatologyRadarHDF5ODIMList.py".
 
 # EURADCLIM datasets
-The EURADCLIM datasets of 1-h and 24-h precipitation accumulations are publicly available here: https://doi.org/10.21944/7ypj-wn68 & https://doi.org/10.21944/1a54-gg96. The accompanying scientific manuscript has been published as discussion paper: https://doi.org/10.5194/essd-2022-334.
+The EURADCLIM datasets of 1-h and 24-h precipitation accumulations are publicly available here: https://doi.org/10.21944/7ypj-wn68 & https://doi.org/10.21944/1a54-gg96. The accompanying scientific article can be found here: https://doi.org/10.5194/essd-15-1441-2023.
 
 # Usage - Example for "VisualizeHDF5ODIMCartopy.py"
 ```
