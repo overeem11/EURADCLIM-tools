@@ -4,8 +4,8 @@
 # Name: AccumulateRadarHDF5ODIMListCount.py
 #
 #
-## Version 1.0
-## Copyright (C) 2022 Aart Overeem
+## Version 1.1
+## Copyright (C) 2025 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -23,7 +23,8 @@
 #
 # Description: Script to accumulate ODIM HDF5 radar rainfall images where the file names are provided as input or to accumulate ODIM HDF5 radar rainfall images for a given path. 
 #              Read ODIM HDF5 radar file, extract rainfall depth, accumulate rainfall depth over provided input files.
-#              Output is an ODIM HDF5 radar file with the accumulated rainfall depth. The field "dataset2", the quality indicator QIND or count field, is removed.
+#              Output is an ODIM HDF5 radar file with the accumulated rainfall depth. The original field "dataset2", the quality indicator QIND or count field, is removed.
+#              A new field "dataset2" is constructed with for each grid cell the number of underlying input files with data (i.e., not equal to the nodata value) 
 #              Use a conversion factor of 1 when input files contain accumulated rainfall (mm).
 #              Use a conversion factor of 0.25 when input files contain rainfall intensity in mm per hour.
 #              nan, nodata and undetect are set to 0, so all data are accumulated irrespective of their value (e.g. missing data), but
@@ -31,9 +32,20 @@
 #              Also in case of missing files an output file is made. If data criterion is not satisfied nodata values are present in the output file. 
 #              Note that we specifically deal with NaN values by setting them to nodata.
 #              Note that this script assumes the default gain = 1.0 & offset = 0.0.
+#
+#              Changes with respect to version 1.0: 
+#              1) A ninth parameter has been added, that is optional. The "dataset2" field is not constructed if the ninth parameter is "NoCount". In case the ninth parameter 
+#              is not provided or is not equal to "NoCount", "dataset2" will contain the counts.
+#              2) The accumulations, "dataset1", are now stored as 32-bit floats instead of 64-bit floats. This saves storage. No changes in offset, gain & nodata values.
+#              3) The counts, "dataset2", are stored as 32-bit integers instead of 64-bit floats. This saves some storage and may prevent rounding errors, because counts are
+#                 integers and should ideally stay integers. No changes in offset, gain & nodata values.
+
 # Usage: python AccumulateRadarHDF5ODIMListCount.py [output filename] [input file names or path with files] [end date for metadata what] [end time for metadata what] [conversion factor] 
-# [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"]
+# [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"] 
+# [Choose "NoCount" to prevent that field "dataset2" is constructed in the output ODIM HDF5 radar file, which would have contained the number of counts]
 # Example (annual precipitation accumulation over the year 2020): python AccumulateRadarHDF5ODIMListCount.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2020_01Y_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM/2020" "20201231" "230000" 1 7320 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path
+# Example (accumulate two files with annual precipitation): python AccumulateRadarHDF5ODIMListCount.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2021_2022_02Y_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2021_01Y_EURADCLIM.h5 RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2022_01Y_EURADCLIM.h5" "20221231" "230000" 1 2 RAD_OPERA_RAINFALL_RATE_201812110715.h5 files
+
 
 
 # Load Python packages:
@@ -57,6 +69,10 @@ ConversionFactor = float(sys.argv[5])
 MinImages = int(sys.argv[6])
 InputFileNameNodata = sys.argv[7]
 PathOrFileNames = sys.argv[8]
+NoCount = False
+if len(sys.argv)==10:
+   if sys.argv[9]=="NoCount":
+      NoCount = True
 
 
 if PathOrFileNames=="files":
@@ -109,7 +125,6 @@ for path in pathlist:
              radardata[indices] = 0
              startdate = f['/dataset1/what'].attrs['startdate']
              starttime = f['/dataset1/what'].attrs['starttime']
-             #np.savetxt("array.txt",radardata, fmt="%s")
              # Count for each radar pixel the number of valid values, i.e. not equal to nodata or nan:
              Count = f[DATAFIELD_NAME][()]
              Count[np.isnan(Count)] = nodata
@@ -176,11 +191,12 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
    del hf[DATAFIELD_NAME]
    # Remove quality indicator / count field if it exists:
    DATAFIELD_NAME_2 = '/dataset2/data1/data'
-   NodeExists = DATAFIELD_NAME_2 in hf
+   DATAOBJECT_NAME_2 = '/dataset2'
+   NodeExists = DATAOBJECT_NAME_2 in hf
    if NodeExists==True:
-     del hf[DATAFIELD_NAME_2]
+     del hf[DATAOBJECT_NAME_2]
    # Create data field including attributes and write to HDF5 output file:
-   dset = hf.create_dataset(DATAFIELD_NAME, data=radardata, compression="gzip", compression_opts=6)
+   dset = hf.create_dataset(DATAFIELD_NAME, data=np.float32(radardata), compression="gzip", compression_opts=6)
    dset.attrs["CLASS"] = np.string_("IMAGE ")
    dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
    # Modify attributes:
@@ -199,25 +215,32 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
    dset.attrs.modify('starttime',starttime)
    dset.attrs.modify('quantity',np.string_("ACRR "))
    #
-   # Create data filled with count (number of images with data for each radar pixel):
-   dset = hf.create_dataset(DATAFIELD_NAME_2, data=Count, compression="gzip", compression_opts=6)
-   dset.attrs["CLASS"] = np.string_("IMAGE ")
-   dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
-   # Modify attributes:
-   dset = hf["dataset2/what"]
-   # If all files are available the start and end date & time will be correct.
-   # Note that for the start date and time the first file which could be read is used, whereas for the end date and time the last file which could be read is used.
-   # So in case of missing files, the start and/or end date & time can become different. In case of a missing file between start and end date & time, this cannot be seen
-   # in the attributes enddate, endtime, startdate, and starttime.
-   if i > 1:
-       dset.attrs.modify('enddate',enddate)
-       dset.attrs.modify('endtime',endtime)
-   if i==1:
-       dset.attrs.modify('enddate',np.string_(Date))
-       dset.attrs.modify('endtime',np.string_(Time))
-   dset.attrs.modify('startdate',startdate)
-   dset.attrs.modify('starttime',starttime)
-   dset.attrs.create('quantity',np.string_("COUNT"))
+   if NoCount!=True:
+      # Create data filled with count (number of images with data for each radar pixel):
+      dset = hf.create_dataset(DATAFIELD_NAME_2, data=np.intc(Count), compression="gzip", compression_opts=6)
+      dset.attrs["CLASS"] = np.string_("IMAGE ")
+      dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+      # Create attributes:
+      hf.create_group("/dataset2/what");
+      dset = hf["dataset2/what"]      
+      # If all files are available the start and end date & time will be correct.
+      # Note that for the start date and time the first file which could be read is used, whereas for the end date and time the last file which could be read is used.
+      # So in case of missing files, the start and/or end date & time can become different. In case of a missing file between start and end date & time, this cannot be seen
+      # in the attributes enddate, endtime, startdate, and starttime.
+      if i > 1:
+          dset.attrs.create('enddate',enddate)
+          dset.attrs.create('endtime',endtime)
+      if i==1:
+          dset.attrs.create('enddate',np.string_(Date))
+          dset.attrs.create('endtime',np.string_(Time))
+      dset.attrs.create('startdate',startdate)
+      dset.attrs.create('starttime',starttime)
+      dset.attrs.create('quantity',np.string_("COUNT"))
+      dset.attrs.create('product',np.string_("COMP"))
+      dset.attrs.create('nodata',np.float64(-9999000.0))
+      dset.attrs.create('undetect',np.float64(-8888000.0))
+      dset.attrs.create('gain',np.float64(1.0))
+      dset.attrs.create('offset',np.float64(0.0))
    #
    # Change date and time in general attributes:
    dset = hf["what"]
@@ -254,11 +277,12 @@ if i==0:                 # If none of the input files can be read, make an outpu
          del hf[DATAFIELD_NAME]
          # Remove quality indicator / count field if it exists:
          DATAFIELD_NAME_2 = '/dataset2/data1/data'
-         NodeExists = DATAFIELD_NAME_2 in hf
+         DATAOBJECT_NAME_2 = '/dataset2'
+         NodeExists = DATAOBJECT_NAME_2 in hf
          if NodeExists==True:
-           del hf[DATAFIELD_NAME_2]
+           del hf[DATAOBJECT_NAME_2]
          # Create data field including attributes and write to HDF5 output file:
-         dset = hf.create_dataset(DATAFIELD_NAME, data=radardata, compression="gzip", compression_opts=6)
+         dset = hf.create_dataset(DATAFIELD_NAME, data=np.float32(radardata), compression="gzip", compression_opts=6)
          dset.attrs["CLASS"] = np.string_("IMAGE ")
          dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
          # Modify attributes:
@@ -273,22 +297,29 @@ if i==0:                 # If none of the input files can be read, make an outpu
          dset.attrs.modify('starttime',np.string_(Time))
          dset.attrs.modify('quantity',np.string_("ACRR "))
          #
-         # Create data filled with count (number of images with data for each radar pixel):
-         radardata[radardata==nodata] = 0
-         dset = hf.create_dataset(DATAFIELD_NAME_2, data=radardata, compression="gzip", compression_opts=6)
-         dset.attrs["CLASS"] = np.string_("IMAGE ")
-         dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
-         # Modify attributes:
-         dset = hf["dataset2/what"]
-         # It seems that the Time is usually e.g. 220500 instead of 220000. Here, we just use 220000.
-         # Moreover, we fill in the end time of observation for both the end and start time.
-         # Since these metadata are generally not used and the end data and time in the general node "what" is OK, we decide to leave it like this.
-         # Note that this only occurs if all files for a given accumulation interval cannot be opened.
-         dset.attrs.modify('enddate',np.string_(Date))
-         dset.attrs.modify('endtime',np.string_(Time))
-         dset.attrs.modify('startdate',np.string_(Date))
-         dset.attrs.modify('starttime',np.string_(Time))
-         dset.attrs.create('quantity',np.string_("COUNT"))
+         if NoCount!=True:
+             # Create data filled with count (number of images with data for each radar pixel):
+             radardata[radardata==nodata] = 0
+             dset = hf.create_dataset(DATAFIELD_NAME_2, data=np.intc(radardata), compression="gzip", compression_opts=6)
+             dset.attrs["CLASS"] = np.string_("IMAGE ")
+             dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+             # Create attributes:
+             hf.create_group("/dataset2/what");
+             dset = hf["dataset2/what"] 
+             # It seems that the Time is usually e.g. 220500 instead of 220000. Here, we just use 220000.
+             # Moreover, we fill in the end time of observation for both the end and start time.
+             # Since these metadata are generally not used and the end data and time in the general node "what" is OK, we decide to leave it like this.
+             # Note that this only occurs if all files for a given accumulation interval cannot be opened.
+             dset.attrs.create('enddate',np.string_(Date))
+             dset.attrs.create('endtime',np.string_(Time))
+             dset.attrs.create('startdate',np.string_(Date))
+             dset.attrs.create('starttime',np.string_(Time))
+             dset.attrs.create('quantity',np.string_("COUNT"))
+             dset.attrs.create('product',np.string_("COMP"))
+             dset.attrs.create('nodata',np.float64(-9999000.0))
+             dset.attrs.create('undetect',np.float64(-8888000.0))
+             dset.attrs.create('gain',np.float64(1.0))
+             dset.attrs.create('offset',np.float64(0.0))
          #
          # Change date and time in general attributes:         
          dset = hf["what"]

@@ -4,8 +4,8 @@
 # Name: VisualizeHDF5ODIMCartopyOSM_GM.py
 #
 #
-## Version 1.0
-## Copyright (C) 2022 Aart Overeem
+## Version 1.1
+## Copyright (C) 2025 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #              A pdf file gives the most accurate results when it comes to plotting radar polygons.
 #              Note that the center of pixels (grid cells) are used to plot the polygons. This actually gives a shift of 1 km in latitude and 1 km in longitude, but
 #              this is negligible at a map of Europe. Probably it is correct after all, since input coordinates to pcolormesh are interpreted as cell centers.
-# Usage: python VisualizeHDF5ODIMCartopyOSM_GM.py [input filename] [output graphical filename, with as extension e.g. "jpg" or "pdf"] [title of map] [legend label text] [color scheme] [scale numbers] [draw country borders] [draw coastlines] [display color for values below lowest number] [colorbar] [extra text] [the resolution of the map in dots per inch] [font size of title] [font size of legend label] [font size of legend] [font size extra text] [draw parallels and meridians] [DatasetNr in ODIM file] [Type of background map: "OSM" for OpenStreetMap & "GM" for Google Maps] [style of Google Maps: e.g. "street" or "satellite"] [value for request: determines resolution of background map / size of text (e.g. city names on map)] [plotting area: minimum longitude, maximum longitude, minimum latitude, maximum latitude] [the alpha blending value, between 0 (transparent) and 1 (opaque) for plotting polygons] [longitude of extra text] [latitude of extra text].
+# Usage: python VisualizeHDF5ODIMCartopyOSM_GM.py [input filename] [output graphical filename, with as extension e.g. "jpg" or "pdf" or "png", which automatically chooses the file format] [title of map] [legend label text] [color scheme] [scale numbers] [draw country borders] [draw coastlines] [display color for values below lowest number] [colorbar] [extra text] [the resolution of the map in dots per inch] [font size of title] [font size of legend label] [font size of legend] [font size extra text] [draw parallels and meridians] [DatasetNr in ODIM file] [Type of background map: "OSM" for OpenStreetMap & "GM" for Google Maps] [style of Google Maps: e.g. "street" or "satellite"] [value for request: determines resolution of background map / size of text (e.g. city names on map)] [plotting area: minimum longitude, maximum longitude, minimum latitude, maximum latitude] [the alpha blending value, between 0 (transparent) and 1 (opaque) for plotting polygons] [longitude of extra text] [latitude of extra text].
 # Example: python VisualizeHDF5ODIMCartopyOSM_GM.py RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM/2020/10/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400.h5 figures/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg 'EURADCLIM' '1-h precip depth (mm)' CbF '[5,20,35,50,65,80]' NoDrawCountries NoDrawCoastlines DoNotColorSetUnder ColorBar '(d) 2 Oct 2020 13-14 UTC' 600 29 29 29 26 NoDrawParallelsMeridians '/dataset1' OSM street 12 '[6.5,7.5,43.5,44.2]' 1 6.55 44.15
 
 
@@ -56,6 +56,8 @@ import pyepsg
 import pandas as pd
 import cartopy.io.img_tiles as cimgt
 import copy
+# Added this static backend (https://matplotlib.org/stable/users/explain/figure/backends.html#static-backends) to avoid that command line is possibly not cleared after running this script in command line in remote sessions:
+mpl.use('Cairo')
 
 
 
@@ -176,7 +178,7 @@ ax.add_image(request, ValueRequest)
 # See for colour scales: https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
 if ScaleType=="Blues":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("Blues"))
+   cmap = mpl.colormaps.get_cmap("Blues")
    colorSetOver = 'indigo'
    colorSetUnder = 'lightgray'
 if ScaleType=="YellowRed":
@@ -191,27 +193,27 @@ if ScaleType=="CbF":
    colorSetUnder = 'white'
 if ScaleType=="RedBlue":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("seismic_r"))
+   cmap = mpl.colormaps.get_cmap("seismic_r")
    colorSetOver = 'black'
    colorSetUnder = 'gray'
 if ScaleType=="PiYG":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("PiYG")) 
+   cmap = mpl.colormaps.get_cmap("PiYG")
    colorSetOver = 'darkgreen'   
    colorSetUnder = 'black'
 if ScaleType=="PiYG_r":   
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("PiYG_r"))
+   cmap = mpl.colormaps.get_cmap("PiYG_r")
    colorSetOver = 'black'
    colorSetUnder = 'darkgreen'
 if ScaleType=="RdYlBu":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("RdYlBu"))
+   cmap = mpl.colormaps.get_cmap("RdYlBu")
    colorSetOver = 'indigo'
    colorSetUnder = 'black' 
 if ScaleType=="Blues_r":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("Blues_r"))
+   cmap = mpl.colormaps.get_cmap("Blues_r")
    colorSetOver = 'lightgray'
    colorSetUnder = 'indigo'  
 

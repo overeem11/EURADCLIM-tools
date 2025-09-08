@@ -4,8 +4,8 @@
 # Name: ClimatologyRadarHDF5ODIMList.py
 #
 #
-## Version 1.0
-## Copyright (C) 2022 Aart Overeem
+## Version 1.1
+## Copyright (C) 2025 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 #              Output is an ODIM HDF5 radar file with the output variable. The field "dataset2", the quality indicator QIND or count field, is removed.
 #              Use a conversion factor of 1 when input files contain accumulated rainfall (mm).
 #              Use a conversion factor of 0.25 when input files contain rainfall intensity in mm per hour.
-#              Not that conversion factor is only needed for "max" and "mean". In case of computation of (relative) frequencies,
+#              Note that conversion factor is only needed for "max" and "mean". In case of computation of (relative) frequencies,
 #              choose the threshold value in the unit of the original data, e.g. millimeters in case of accumulations and millimeters per hours in case of intensities.
 #              nan, nodata and undetect are set to 0, so all data are used irrespective of their value (e.g. missing data), but
 #              the needed minimum availability per radar pixel is employed in the end to decide whether a radar pixel should have data or nodata.  
@@ -39,10 +39,10 @@
 # Usage: python ClimatologyRadarHDF5ODIMList.py [output filename] [input file names or path with files] [end date for metadata what] [end time for metadata what] [conversion factor] 
 # [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"] 
 # [operation: max/mean/freq/relfreq] [threshold value (only needs to be provided when operation is "freq" or "relfreq")]
-# Example (mean hourly rainfall over 2013-2020): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2020_01Y_Mean_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20201231" "230000" 1 58440 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path mean
-# Example (relative frequency of exceedance of 5 mm in an hour over 2013-2020): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2020_01Y_RelFreq_5mm_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20201231" "230000" 1 58440 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path relfreq 5
-# Example (frequency of exceedance of 25 mm in an hour over 2013-2020): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2020_01Y_Freq_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20201231" "230000" 1 58440 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path freq 25 
-# Example (maximum 24-h rainfall over 2013-2020): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_24H_RAINFALL_ACCUMULATION_2013_2020_01Y_Max_EURADCLIM.h5" "RAD_OPERA_24H_RAINFALL_ACCUMULATION_EURADCLIM" "20201231" "230000" 1 58440 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path max
+# Example (mean hourly rainfall over 2013-2022): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2022_01Y_Mean_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20221231" "230000" 1 73040 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path mean
+# Example (relative frequency of exceedance of 5 mm in an hour over 2013-2022): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2022_01Y_RelFreq_5mm_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20221231" "230000" 1 73040 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path relfreq 5
+# Example (frequency of exceedance of 25 mm in an hour over 2013-2022): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_2013_2022_01Y_Freq_EURADCLIM.h5" "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_EURADCLIM" "20221231" "230000" 1 73040 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path freq 25 
+# Example (maximum 24-h rainfall over 2013-2022): python ClimatologyRadarHDF5ODIMList.py "RAD_OPERA_24H_RAINFALL_ACCUMULATION_2013_2022_01Y_Max_EURADCLIM.h5" "RAD_OPERA_24H_RAINFALL_ACCUMULATION_EURADCLIM" "20221231" "230000" 1 73040 RAD_OPERA_RAINFALL_RATE_201812110715.h5 path max
 
 
 # Load Python packages:
@@ -249,7 +249,7 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
 
 
 if i==0:                 # If none of the input files can be read, make an output file with metadata and the radardata field being entirely nodata:
-   print("All radar files are empty. Hence, an accumulated radar rainfall image could not be produced, but a file with nodata entries is produced.")
+   print("All radar files are empty. Hence, an output radar image could not be produced, but a file with nodata entries is produced.")
    if os.path.getsize(InputFileNameNodata) > 0:               # Is used to check the size of specified path. It returns the size of specified path in bytes.
                                                               # The method raises OSError if the file does not exist or is somehow inaccessible.
       if h5py.is_hdf5(InputFileNameNodata):                   # Check that a file is a valid HDF5 file.

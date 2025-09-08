@@ -4,8 +4,8 @@
 # Name: VisualizeHDF5ODIMCartopy.py
 #
 #
-## Version 1.0
-## Copyright (C) 2022 Aart Overeem
+## Version 1.1
+## Copyright (C) 2025 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #              A pdf file gives the most accurate results when it comes to plotting radar polygons.
 #              Note that the center of pixels (grid cells) are used to plot the polygons. This actually gives a shift of 1 km in latitude and 1 km in longitude, but
 #              this is negligible at a map of Europe. Probably it is correct after all, since input coordinates to pcolormesh are interpreted as cell centers.
-# Usage: python VisualizeHDF5ODIMCartopy.py [input filename] [output graphical filename, with as extension e.g. "jpg" or "pdf"] [title of map] [legend label text] [color scheme] [scale numbers] [draw country borders] [draw coastlines] [draw lake lines] [display color for values below lowest number] [colorbar] [extra text] [color of land] [color of ocean, rivers & lakes] [the resolution of the map in dots per inch] [font size of title] [font size of legend label] [font size of legend] [font size extra text] [draw parallels and meridians] [draw rivers] [draw provinces] [draw north arrow] [plot scale bar 500 km] [DatasetNr in ODIM file]
+# Usage: python VisualizeHDF5ODIMCartopy.py [input filename] [output graphical filename, with as extension e.g. "jpg" or "pdf" or "png", which automatically chooses the file format] [title of map] [legend label text] [color scheme] [scale numbers] [draw country borders] [draw coastlines] [draw lake lines] [display color for values below lowest number] [colorbar] [extra text] [color of land] [color of ocean, rivers & lakes] [the resolution of the map in dots per inch] [font size of title] [font size of legend label] [font size of legend] [font size extra text] [draw parallels and meridians] [draw rivers] [draw provinces] [draw north arrow] [plot scale bar 500 km] [DatasetNr in ODIM file]
 # Example: python VisualizeHDF5ODIMCartopy.py RAD_OPERA_24H_RAINFALL_ACCUMULATION_EURADCLIM/2013/05/RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400.h5 RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg 'EURADCLIM' '24-h precip depth (mm)' CbF '[1,10,20,30,40,50,60]' DrawCountries DrawCoastlines DrawLakelines DoNotColorSetUnder ColorBar '(a) End: 31 May 2013 14 UTC' lightgray lightblue 300 29 29 29 21 NA NA NA DrawNorthArrow DrawScaleBar '/dataset1'
 
 
@@ -51,6 +51,8 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import pyepsg
 import pandas as pd
 import copy
+# Added this static backend (https://matplotlib.org/stable/users/explain/figure/backends.html#static-backends) to avoid that command line is possibly not cleared after running this script in command line in remote sessions:
+mpl.use('Cairo')
 
 
 
@@ -206,7 +208,7 @@ ax.set_extent(extent)
 # See for colour scales: https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
 if ScaleType=="Blues":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("Blues"))
+   cmap = mpl.colormaps.get_cmap("Blues")
    colorSetOver = 'indigo'
    colorSetUnder = 'lightgray'
 if ScaleType=="YellowRed":
@@ -221,12 +223,12 @@ if ScaleType=="CbF":
    colorSetUnder = 'white'
 if ScaleType=="RedBlue":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("seismic_r"))
+   cmap = mpl.colormaps.get_cmap("seismic_r")
    colorSetOver = 'black'
    colorSetUnder = 'gray'
 if ScaleType=="Blues_r":
    levels = levels
-   cmap = copy.copy(mpl.cm.get_cmap("Blues_r"))
+   cmap = mpl.colormaps.get_cmap("Blues_r")
    colorSetOver = 'tomato'
    colorSetUnder = 'indigo'     
 
