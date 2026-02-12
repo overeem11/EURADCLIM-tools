@@ -39,7 +39,7 @@ First obtain the file "RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400.h5: f
 python VisualizeHDF5ODIMCartopyOSM_GM.py RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400.h5 figures/RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg 'EURADCLIM' '1-h precip depth (mm)' CbF '[5,20,35,50,65,80]' NoDrawCountries NoDrawCoastlines DoNotColorSetUnder ColorBar '(d) 2 Oct 2020 13-14 UTC' 600 29 29 29 26 NoDrawParallelsMeridians '/dataset1' OSM street 12 '[6.5,7.5,43.5,44.2]' 1 6.55 44.15
 ```
 <img src="RAD_OPERA_HOURLY_RAINFALL_ACCUMULATION_202010021400_EURADCLIM_OSM_France.jpg" alt="drawing" width="500"/>
-Figure taken from https://doi.org/10.5194/essd-2022-334. &copy OpenStreetMap contributors 2025. Distributed under the Open Data Commons Open Database License (ODbL) v1.0.
+Figure taken from https://doi.org/10.5194/essd-2022-334. &copy OpenStreetMap contributors 2025. Distributed under the Open Data Commons Open Database License (ODbL) v1.0.\\
 
 Note that by default a class above the highest value of the supplied scale is plotted in the legend and in the figure (this implies that values equal to or exceeding the highest value of the supplied scale belong to this highest class). Note that when "DoColorSetUnder = 'yes'", also a class below the lowest value of the supplied scale is plotted in the legend and in the figure.
 
