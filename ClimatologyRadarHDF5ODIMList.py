@@ -4,8 +4,8 @@
 # Name: ClimatologyRadarHDF5ODIMList.py
 #
 #
-## Version 1.1
-## Copyright (C) 2025 Aart Overeem
+## Version 1.2
+## Copyright (C) 2026 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -36,6 +36,9 @@
 #              Also in case of missing files an output file is made. If data criterion is not satisfied nodata values are present in the output file. 
 #              Note that we specifically deal with NaN values by setting them to nodata.
 #              Note that this script assumes the default gain = 1.0 & offset = 0.0.
+#              Changes with respect to version 1.1:
+#              1) Usage of "np.bytes_" instead of "np.string_"
+
 # Usage: python ClimatologyRadarHDF5ODIMList.py [output filename] [input file names or path with files] [end date for metadata what] [end time for metadata what] [conversion factor] 
 # [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"] 
 # [operation: max/mean/freq/relfreq] [threshold value (only needs to be provided when operation is "freq" or "relfreq")]
@@ -223,8 +226,8 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
      del hf[DATAFIELD_NAME_2]
    # Create data field including attributes and write to HDF5 output file:
    dset = hf.create_dataset(DATAFIELD_NAME, data=radardata, compression="gzip", compression_opts=6)
-   dset.attrs["CLASS"] = np.string_("IMAGE ")
-   dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+   dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+   dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
    # Modify attributes:
    dset = hf["dataset1/what"]
    # If all files are available the start and end date & time will be correct.
@@ -235,16 +238,16 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
        dset.attrs.modify('enddate',enddate)
        dset.attrs.modify('endtime',endtime)
    if i==1:
-       dset.attrs.modify('enddate',np.string_(Date))
-       dset.attrs.modify('endtime',np.string_(Time))
+       dset.attrs.modify('enddate',np.bytes_(Date))
+       dset.attrs.modify('endtime',np.bytes_(Time))
    dset.attrs.modify('startdate',startdate)
    dset.attrs.modify('starttime',starttime)
-   dset.attrs.modify('quantity',np.string_("CLIM "))
+   dset.attrs.modify('quantity',np.bytes_("CLIM "))
    #
    # Change date and time in general attributes:
    dset = hf["what"]
-   dset.attrs.modify('date',np.string_(Date))
-   dset.attrs.modify('time',np.string_(Time))
+   dset.attrs.modify('date',np.bytes_(Date))
+   dset.attrs.modify('time',np.bytes_(Time))
    hf.close()
 
 
@@ -281,25 +284,25 @@ if i==0:                 # If none of the input files can be read, make an outpu
            del hf[DATAFIELD_NAME_2]
          # Create data field including attributes and write to HDF5 output file:
          dset = hf.create_dataset(DATAFIELD_NAME, data=radardata, compression="gzip", compression_opts=6)
-         dset.attrs["CLASS"] = np.string_("IMAGE ")
-         dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+         dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+         dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
          # Modify attributes:
          dset = hf["dataset1/what"]
          # It seems that the Time is usually e.g. 220500 instead of 220000. Here, we just use 220000.
          # Moreover, we fill in the end time of observation for both the end and start time.
          # Since these metadata are generally not used and the end data and time in the general node "what" is OK, we decide to leave it like this.
          # Note that this only occurs if all files for a given accumulation interval cannot be opened.
-         dset.attrs.modify('enddate',np.string_(Date))
-         dset.attrs.modify('endtime',np.string_(Time))
-         dset.attrs.modify('startdate',np.string_(Date))
-         dset.attrs.modify('starttime',np.string_(Time))
-         dset.attrs.modify('quantity',np.string_("CLIM "))
+         dset.attrs.modify('enddate',np.bytes_(Date))
+         dset.attrs.modify('endtime',np.bytes_(Time))
+         dset.attrs.modify('startdate',np.bytes_(Date))
+         dset.attrs.modify('starttime',np.bytes_(Time))
+         dset.attrs.modify('quantity',np.bytes_("CLIM "))
          #
          # Change date and time in general attributes:         
          dset = hf["what"]
          # This is correct, because this is the end date and time:
-         dset.attrs.modify('date',np.string_(Date))
-         dset.attrs.modify('time',np.string_(Time))
+         dset.attrs.modify('date',np.bytes_(Date))
+         dset.attrs.modify('time',np.bytes_(Time))
          hf.close()
       else:
          print("Nodata input file cannot be opened! No output file is constructed!")

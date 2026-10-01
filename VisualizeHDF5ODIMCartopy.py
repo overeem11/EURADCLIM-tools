@@ -4,8 +4,8 @@
 # Name: VisualizeHDF5ODIMCartopy.py
 #
 #
-## Version 1.1
-## Copyright (C) 2025 Aart Overeem
+## Version 1.2
+## Copyright (C) 2026 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@
 #              A pdf file gives the most accurate results when it comes to plotting radar polygons.
 #              Note that the center of pixels (grid cells) are used to plot the polygons. This actually gives a shift of 1 km in latitude and 1 km in longitude, but
 #              this is negligible at a map of Europe. Probably it is correct after all, since input coordinates to pcolormesh are interpreted as cell centers.
+#              Changes with respect to version 1.1:
+#              This line of code is now discarded, i.e., undetect values can now be plotted: RArray[RArray == undetect] = np.nan
+
 # Usage: python VisualizeHDF5ODIMCartopy.py [input filename] [output graphical filename, with as extension e.g. "jpg" or "pdf" or "png", which automatically chooses the file format] [title of map] [legend label text] [color scheme] [scale numbers] [draw country borders] [draw coastlines] [draw lake lines] [display color for values below lowest number] [colorbar] [extra text] [color of land] [color of ocean, rivers & lakes] [the resolution of the map in dots per inch] [font size of title] [font size of legend label] [font size of legend] [font size extra text] [draw parallels and meridians] [draw rivers] [draw provinces] [draw north arrow] [plot scale bar 500 km] [DatasetNr in ODIM file]
 # Example: python VisualizeHDF5ODIMCartopy.py RAD_OPERA_24H_RAINFALL_ACCUMULATION_EURADCLIM/2013/05/RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400.h5 RAD_OPERA_24H_RAINFALL_ACCUMULATION_201305311400_EURADCLIM.jpg 'EURADCLIM' '24-h precip depth (mm)' CbF '[1,10,20,30,40,50,60]' DrawCountries DrawCoastlines DrawLakelines DoNotColorSetUnder ColorBar '(a) End: 31 May 2013 14 UTC' lightgray lightblue 300 29 29 29 21 NA NA NA DrawNorthArrow DrawScaleBar '/dataset1'
 
@@ -178,7 +181,7 @@ if DoColorSetUnder!="DoColorSetUnder":
    RArray[RArray < LowestValue] = np.nan
 # No data & undetect data values are made "not available".
 RArray[RArray == nodata] = np.nan
-RArray[RArray == undetect] = np.nan
+#RArray[RArray == undetect] = np.nan
 
 
 

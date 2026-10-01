@@ -4,8 +4,8 @@
 # Name: AccumulateRadarHDF5ODIMListCount.py
 #
 #
-## Version 1.1
-## Copyright (C) 2025 Aart Overeem
+## Version 1.2
+## Copyright (C) 2026 Aart Overeem
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -39,6 +39,11 @@
 #              2) The accumulations, "dataset1", are now stored as 32-bit floats instead of 64-bit floats. This saves storage. No changes in offset, gain & nodata values.
 #              3) The counts, "dataset2", are stored as 32-bit integers instead of 64-bit floats. This saves some storage and may prevent rounding errors, because counts are
 #                 integers and should ideally stay integers. No changes in offset, gain & nodata values.
+#
+#              Changes with respect to version 1.1:
+#              1) Usage of "np.bytes_" instead of "np.string_"
+#              2) OPERA rain rate files from ~2024 or later can store metadata in a different path. 
+#                 Metadata "nodata", "undetect", "startdate", "starttime", "enddate" and "endtime" have a different path. This script can also work with the new paths and automatically takes this into account.
 
 # Usage: python AccumulateRadarHDF5ODIMListCount.py [output filename] [input file names or path with files] [end date for metadata what] [end time for metadata what] [conversion factor] 
 # [needed minimum number of images with data] [input file which is used to construct output file in case all input files are not valid] [path or file names?: choose "path" or "files"] 
@@ -111,8 +116,14 @@ for path in pathlist:
              f = h5py.File(path, "r")
              InputFileName = str(path)
              # Read data:
-             nodata = f['/dataset1/what'].attrs['nodata']
-             undetect = f['/dataset1/what'].attrs['undetect']
+             try: 
+                 nodata = f['/dataset1/what'].attrs['nodata']
+             except:
+                 nodata = f['/dataset1/data1/what'].attrs['nodata']
+             try: 
+                 undetect = f['/dataset1/what'].attrs['undetect']
+             except:
+                 undetect = f['/dataset1/data1/what'].attrs['undetect']
              radardata = f[DATAFIELD_NAME][()]
              # Set undetect to 0:             
              truth_table = radardata==undetect
@@ -123,8 +134,14 @@ for path in pathlist:
              truth_table = radardata==nodata
              indices = np.where(truth_table)
              radardata[indices] = 0
-             startdate = f['/dataset1/what'].attrs['startdate']
-             starttime = f['/dataset1/what'].attrs['starttime']
+             try:
+                startdate = f['/dataset1/what'].attrs['startdate']
+             except:
+                startdate = f['/dataset1/data1/what'].attrs['startdate']
+             try:
+                starttime = f['/dataset1/what'].attrs['starttime']
+             except:
+                starttime = f['/dataset1/data1/what'].attrs['starttime']
              # Count for each radar pixel the number of valid values, i.e. not equal to nodata or nan:
              Count = f[DATAFIELD_NAME][()]
              Count[np.isnan(Count)] = nodata
@@ -139,8 +156,14 @@ for path in pathlist:
              # Open file:
              f = h5py.File(path, mode='r')
              # Read data:  
-             nodata = f['/dataset1/what'].attrs['nodata']
-             undetect = f['/dataset1/what'].attrs['undetect']
+             try: 
+                 nodata = f['/dataset1/what'].attrs['nodata']
+             except:
+                 nodata = f['/dataset1/data1/what'].attrs['nodata']
+             try: 
+                 undetect = f['/dataset1/what'].attrs['undetect']
+             except:
+                 undetect = f['/dataset1/data1/what'].attrs['undetect']
              radardata_temp = []  
              radardata_temp = f[DATAFIELD_NAME][()]
              # Set undetect to 0:
@@ -153,8 +176,14 @@ for path in pathlist:
              indices = np.where(truth_table)
              radardata_temp[indices] = 0
              radardata = np.add(radardata,radardata_temp)
-             enddate = f['/dataset1/what'].attrs['enddate']
-             endtime = f['/dataset1/what'].attrs['endtime']
+             try:
+                 enddate = f['/dataset1/what'].attrs['enddate']
+             except:
+                 enddate = f['/dataset1/data1/what'].attrs['enddate']
+             try:
+                 endtime = f['/dataset1/what'].attrs['endtime']
+             except:
+                 endtime = f['/dataset1/data1/what'].attrs['endtime']
              # Count for each radar pixel the number of valid values, i.e. not equal to nodata or nan:
              Count_temp = f[DATAFIELD_NAME][()]
              Count_temp[np.isnan(Count_temp)] = nodata
@@ -197,8 +226,8 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
      del hf[DATAOBJECT_NAME_2]
    # Create data field including attributes and write to HDF5 output file:
    dset = hf.create_dataset(DATAFIELD_NAME, data=np.float32(radardata), compression="gzip", compression_opts=6)
-   dset.attrs["CLASS"] = np.string_("IMAGE ")
-   dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+   dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+   dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
    # Modify attributes:
    dset = hf["dataset1/what"]
    # If all files are available the start and end date & time will be correct.
@@ -209,17 +238,17 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
        dset.attrs.modify('enddate',enddate)
        dset.attrs.modify('endtime',endtime)
    if i==1:
-       dset.attrs.modify('enddate',np.string_(Date))
-       dset.attrs.modify('endtime',np.string_(Time))
+       dset.attrs.modify('enddate',np.bytes_(Date))
+       dset.attrs.modify('endtime',np.bytes_(Time))
    dset.attrs.modify('startdate',startdate)
    dset.attrs.modify('starttime',starttime)
-   dset.attrs.modify('quantity',np.string_("ACRR "))
+   dset.attrs.modify('quantity',np.bytes_("ACRR "))
    #
    if NoCount!=True:
       # Create data filled with count (number of images with data for each radar pixel):
       dset = hf.create_dataset(DATAFIELD_NAME_2, data=np.intc(Count), compression="gzip", compression_opts=6)
-      dset.attrs["CLASS"] = np.string_("IMAGE ")
-      dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+      dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+      dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
       # Create attributes:
       hf.create_group("/dataset2/what");
       dset = hf["dataset2/what"]      
@@ -231,12 +260,12 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
           dset.attrs.create('enddate',enddate)
           dset.attrs.create('endtime',endtime)
       if i==1:
-          dset.attrs.create('enddate',np.string_(Date))
-          dset.attrs.create('endtime',np.string_(Time))
+          dset.attrs.create('enddate',np.bytes_(Date))
+          dset.attrs.create('endtime',np.bytes_(Time))
       dset.attrs.create('startdate',startdate)
       dset.attrs.create('starttime',starttime)
-      dset.attrs.create('quantity',np.string_("COUNT"))
-      dset.attrs.create('product',np.string_("COMP"))
+      dset.attrs.create('quantity',np.bytes_("COUNT"))
+      dset.attrs.create('product',np.bytes_("COMP"))
       dset.attrs.create('nodata',np.float64(-9999000.0))
       dset.attrs.create('undetect',np.float64(-8888000.0))
       dset.attrs.create('gain',np.float64(1.0))
@@ -244,8 +273,8 @@ if i > 0:        # Implies that at least 1 radar image can be read, but can cont
    #
    # Change date and time in general attributes:
    dset = hf["what"]
-   dset.attrs.modify('date',np.string_(Date))
-   dset.attrs.modify('time',np.string_(Time))
+   dset.attrs.modify('date',np.bytes_(Date))
+   dset.attrs.modify('time',np.bytes_(Time))
    hf.close()
 
 
@@ -257,7 +286,10 @@ if i==0:                 # If none of the input files can be read, make an outpu
          # Open file:
          f = h5py.File(InputFileNameNodata, "r")
          # Read data:
-         nodata = f['/dataset1/what'].attrs['nodata']
+         try: 
+             nodata = f['/dataset1/what'].attrs['nodata']
+         except:
+             nodata = f['/dataset1/data1/what'].attrs['nodata']
          radardata = f[DATAFIELD_NAME][()]
          truth_table = radardata!=nodata
          indices = np.where(truth_table)
@@ -283,26 +315,26 @@ if i==0:                 # If none of the input files can be read, make an outpu
            del hf[DATAOBJECT_NAME_2]
          # Create data field including attributes and write to HDF5 output file:
          dset = hf.create_dataset(DATAFIELD_NAME, data=np.float32(radardata), compression="gzip", compression_opts=6)
-         dset.attrs["CLASS"] = np.string_("IMAGE ")
-         dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+         dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+         dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
          # Modify attributes:
          dset = hf["dataset1/what"]
          # It seems that the Time is usually e.g. 220500 instead of 220000. Here, we just use 220000.
          # Moreover, we fill in the end time of observation for both the end and start time.
          # Since these metadata are generally not used and the end data and time in the general node "what" is OK, we decide to leave it like this.
          # Note that this only occurs if all files for a given accumulation interval cannot be opened.
-         dset.attrs.modify('enddate',np.string_(Date))
-         dset.attrs.modify('endtime',np.string_(Time))
-         dset.attrs.modify('startdate',np.string_(Date))
-         dset.attrs.modify('starttime',np.string_(Time))
-         dset.attrs.modify('quantity',np.string_("ACRR "))
+         dset.attrs.modify('enddate',np.bytes_(Date))
+         dset.attrs.modify('endtime',np.bytes_(Time))
+         dset.attrs.modify('startdate',np.bytes_(Date))
+         dset.attrs.modify('starttime',np.bytes_(Time))
+         dset.attrs.modify('quantity',np.bytes_("ACRR "))
          #
          if NoCount!=True:
              # Create data filled with count (number of images with data for each radar pixel):
              radardata[radardata==nodata] = 0
              dset = hf.create_dataset(DATAFIELD_NAME_2, data=np.intc(radardata), compression="gzip", compression_opts=6)
-             dset.attrs["CLASS"] = np.string_("IMAGE ")
-             dset.attrs["IMAGE_VERSION"] = np.string_("1.2 ") 
+             dset.attrs["CLASS"] = np.bytes_("IMAGE ")
+             dset.attrs["IMAGE_VERSION"] = np.bytes_("1.2 ") 
              # Create attributes:
              hf.create_group("/dataset2/what");
              dset = hf["dataset2/what"] 
@@ -310,12 +342,12 @@ if i==0:                 # If none of the input files can be read, make an outpu
              # Moreover, we fill in the end time of observation for both the end and start time.
              # Since these metadata are generally not used and the end data and time in the general node "what" is OK, we decide to leave it like this.
              # Note that this only occurs if all files for a given accumulation interval cannot be opened.
-             dset.attrs.create('enddate',np.string_(Date))
-             dset.attrs.create('endtime',np.string_(Time))
-             dset.attrs.create('startdate',np.string_(Date))
-             dset.attrs.create('starttime',np.string_(Time))
-             dset.attrs.create('quantity',np.string_("COUNT"))
-             dset.attrs.create('product',np.string_("COMP"))
+             dset.attrs.create('enddate',np.bytes_(Date))
+             dset.attrs.create('endtime',np.bytes_(Time))
+             dset.attrs.create('startdate',np.bytes_(Date))
+             dset.attrs.create('starttime',np.bytes_(Time))
+             dset.attrs.create('quantity',np.bytes_("COUNT"))
+             dset.attrs.create('product',np.bytes_("COMP"))
              dset.attrs.create('nodata',np.float64(-9999000.0))
              dset.attrs.create('undetect',np.float64(-8888000.0))
              dset.attrs.create('gain',np.float64(1.0))
@@ -324,8 +356,8 @@ if i==0:                 # If none of the input files can be read, make an outpu
          # Change date and time in general attributes:         
          dset = hf["what"]
          # This is correct, because this is the end date and time:
-         dset.attrs.modify('date',np.string_(Date))
-         dset.attrs.modify('time',np.string_(Time))
+         dset.attrs.modify('date',np.bytes_(Date))
+         dset.attrs.modify('time',np.bytes_(Time))
          hf.close()
       else:
          print("Nodata input file cannot be opened! No output file is constructed!")
