@@ -5,7 +5,7 @@ EURADCLIM (EUropean RADar CLIMatology) is a publicly available climatological da
 
 # Tools
 The following tools, written in programming language Python (version 3), are made available in EURADCLIM-tools:
-- "AccumulateRadar_netCDF4_CF_Count.py": Script to accumulate netCDF4 CF-1.8 radar precipitation images where the file names are provided as input or to accumulate netCDF4 CF-1.8 radar precipitation images for a given path.
+- "AccumulateRadar_netCDF4_CF.py": Script to accumulate netCDF4 CF-1.8 radar precipitation images where the file names are provided as input or to accumulate netCDF4 CF-1.8 radar precipitation images for a given path.
 - "ClimatologyRadar_netCDF4_CF": Script to perform climatological analysis on netCDF4 CF-1.8 radar precipitation images where the file names are provided as input or for a given path. The maximum rainfall, mean rainfall, number of events (= frequency) above a threshold value, or number of events above a threshold value divided by the total number of events (= relative frequency) can be computed.
 - "Visualize_netCDF4_CF_Cartopy.py": Script to visualize netCDF4 CF-1.8 images (data at a 2-D grid) over Europe.
 - "Visualize_netCDF4_CF_CartopyOSM_GM.py": Script to visualize netCDF4 CF-1.8 images (data at a 2-D grid) over Europe. Draws an OpenStreetMap or Google Maps as background. Useful when zooming in on a part of Europe.
